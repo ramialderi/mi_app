@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>متجر تطبيقاتي</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f2f5f3;--card:#fff;--ink:#12211e;--muted:#5b6b67;--line:#d9e2de;--accent:#0e7c66;--accent-ink:#fff;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e1816;--card:#16231f;--ink:#e8f0ed;--muted:#9bb0aa;--line:#26372f;--accent:#3cc4a4;--accent-ink:#06201a}}
+:root[data-theme="dark"]{--bg:#0e1816;--card:#16231f;--ink:#e8f0ed;--muted:#9bb0aa;--line:#26372f;--accent:#3cc4a4;--accent-ink:#06201a}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Cairo","Segoe UI",Tahoma,"Noto Naskh Arabic",sans-serif;line-height:1.7}
+main{max-width:720px;margin:0 auto;padding:28px 16px 48px}
+h1{font-size:2rem;font-weight:800;margin:0 0 4px}
+.sub{color:var(--muted);margin:0 0 20px}
+input{width:100%;padding:12px 14px;border:1px solid var(--line);border-radius:10px;background:var(--card);color:var(--ink);font:inherit;margin-bottom:16px}
+input:focus-visible,a:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.app{display:flex;gap:14px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:12px}
+.ic{flex:none;width:56px;height:56px;border-radius:14px;display:grid;place-items:center;font-size:1.6rem;font-weight:800;color:#fff}
+.info{flex:1;min-width:0}
+.info h2{font-size:1.1rem;margin:0}
+.info p{margin:2px 0 0;color:var(--muted);font-size:.95rem}
+.meta{font-size:.8rem;color:var(--muted)}
+.btn{flex:none;background:var(--accent);color:var(--accent-ink);padding:8px 18px;border-radius:999px;text-decoration:none;font-weight:600}
+.src{display:block;text-align:center;font-size:.8rem;margin-top:4px;color:var(--muted)}
+.empty{text-align:center;color:var(--muted);padding:32px 0}
+@media (max-width:420px){.app{flex-wrap:wrap}.btn{width:100%;text-align:center}}
+</style>
+</head>
+<body>
+<main>
+<h1>متجر تطبيقاتي</h1>
+<p class="sub">تطبيقات أندرويد مجانية، حمّل ملف APK مباشرة.</p>
+<input id="q" type="search" placeholder="ابحث عن تطبيق…" aria-label="بحث">
+<div id="list"></div>
+</main>
+<script>
+// لإضافة تطبيق جديد: انسخ كتلة {…} وعدّل بياناتها.
+const APPS = [
+  {
+    name: "القرآن",
+    desc: "تطبيق أندرويد لقراءة القرآن الكريم.",
+    color: "#0e7c66",
+    apk: "https://github.com/ramialderi/quran/releases/latest",
+    source: "https://github.com/ramialderi/quran"
+  }
+];
+const list = document.getElementById("list"), q = document.getElementById("q");
+function esc(s){return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]))}
+function render(){
+  const t = q.value.trim();
+  const r = APPS.filter(a => (a.name + " " + a.desc).includes(t));
+  list.innerHTML = r.length ? r.map(a => `
+    <div class="app">
+      <div class="ic" style="background:${esc(a.color||"#0e7c66")}" aria-hidden="true">${esc(a.name[0])}</div>
+      <div class="info"><h2>${esc(a.name)}</h2><p>${esc(a.desc)}</p></div>
+      <div><a class="btn" href="${esc(a.apk)}" target="_blank" rel="noopener">تحميل</a>
+      ${a.source ? `<a class="src" href="${esc(a.source)}" target="_blank" rel="noopener">الكود المصدري</a>` : ""}</div>
+    </div>`).join("") : '<p class="empty">لا توجد تطبيقات مطابقة لبحثك.</p>';
+}
+q.addEventListener("input", render);
+render();
+</script>
+</body>
+</html>
